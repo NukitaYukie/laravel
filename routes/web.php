@@ -20,6 +20,6 @@ Route::group(['prefix' => 'admin'], function() {
 
 Route::get('XXX','Admin\AAAController@bbb');
 
-Route::get('admin/profile/crete','Admin\ProfileController@add');
+Route::get('admin/profile/create','Admin\ProfileController@add');
 Route::get('admin/profile/edit','Admin\ProfileController@edit');
 
