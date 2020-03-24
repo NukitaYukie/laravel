@@ -7,6 +7,14 @@ use App\Http\Controllers\Controller;
 
 use App\News;
 
+// 以下を追記
+use App\History;
+
+use Carbon\Carbon;
+
+
+
+
 class NewsController extends Controller
 {
   // 以下を追記
@@ -86,6 +94,11 @@ public function index(Request $request)
       $news = News::find($request->id);
       // 送信されてきたフォームデータを格納する
       $news_form = $request->all();
+     
+     
+     
+     
+     
       
      
      if (isset($news_form['image'])) {
@@ -96,13 +109,16 @@ public function index(Request $request)
         $news->image_path = null;
         unset($news_form['remove']);
       }
-      
-     
-      
       unset($news_form['_token']);
 
       // 該当するデータを上書きして保存する
       $news->fill($news_form)->save();
+
+      // 以下を追記
+      $history = new History;
+      $history->news_id = $news->id;
+      $history->edited_at = Carbon::now();
+      $history->save();
 
       return redirect('admin/news');
         

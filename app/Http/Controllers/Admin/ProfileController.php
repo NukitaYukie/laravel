@@ -7,6 +7,12 @@ use App\Http\Controllers\Controller;
 
 use App\Profile;
 
+
+// 以下を追記
+use App\History;
+
+use Carbon\Carbon;
+
 class ProfileController extends Controller
 {
     
@@ -80,6 +86,15 @@ class ProfileController extends Controller
       } elseif (isset($request->remove)) {
         $profile->image_path = null;
         unset($profile_form['remove']);
+        
+        // 以下を追記
+        $history = new History;
+        $history->profile_id = $news->id;
+        $history->edited_at = Carbon::now();
+        $history->save();
+
+        return redirect('admin/profile/');
+        
       }
       
      
