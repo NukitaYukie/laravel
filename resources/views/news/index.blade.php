@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        できた
+        できた!
         <hr color="#c0c0c0">
         @if (!is_null($headline))
             <div class="row">

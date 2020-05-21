@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
-use Storage; 
+use Storage;
+use App\Product;
 class ProductController extends Controller
 {
   // 以下を追記
@@ -48,7 +49,7 @@ public function create(Request $request)
      
 
       // admin/product/createにリダイレクトする
-      return redirect('admin/product/create');
+      return redirect('admin/product');
   } 
   
   

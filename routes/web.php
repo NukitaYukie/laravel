@@ -34,6 +34,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     Route::post('profile/edit','Admin\ProfileController@update');
     Route::get('profile/delete', 'Admin\ProfileController@delete');
     
+    Route::get('product', 'Admin\ProductController@index');
     Route::get('product/create', 'Admin\ProductController@add');
-    
 });
