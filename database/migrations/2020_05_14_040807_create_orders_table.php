@@ -21,7 +21,7 @@ class CreateOrdersTable extends Migration
             $table->string('user_name'); 
             $table->MediumInteger('payment');
             $table->MediumInteger('tax');
-            $table->string('description'); 
+            $table->string('description');
             $table->dateTime('deleted_at')->nullable();
             $table->timestamps();
         });
