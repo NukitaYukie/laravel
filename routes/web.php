@@ -36,6 +36,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     
     Route::get('product', 'Admin\ProductController@index');
     Route::get('product/create', 'Admin\ProductController@add');
+    
     Route::post('product/create', 'Admin\ProductController@create');
     Route::get('product/edit','Admin\ProductController@edit');
     Route::post('product/edit','Admin\ProductController@update');
@@ -43,6 +44,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     
     Route::get('orders', 'Admin\OrdersController@index');
     Route::get('orders/create', 'Admin\OrdersController@add');
+    Route::post('orders/check', 'Admin\OrdersController@check');
     Route::post('orders/create', 'Admin\OrdersController@create');
     Route::get('orders/edit','Admin\OrdersController@edit');
     Route::post('orders/edit','Admin\OrdersController@update');

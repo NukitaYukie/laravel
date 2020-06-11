@@ -21,12 +21,6 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-2" for="body">値段</label>
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="price" value="{{ $product_form->price }}">
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label class="col-md-2" for="image">画像</label>
                         <div class="col-md-10">
                             <input type="file" class="form-control-file" name="image">

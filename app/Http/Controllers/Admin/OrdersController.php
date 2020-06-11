@@ -19,7 +19,11 @@ class OrdersController extends Controller
       return view('admin.orders.create', ['products' => $products]);
   }
 
-
+public function check(Request $request)
+{ 
+      $form = $request->all();
+      return view('admin.orders.check',['products' =>$form]);
+}
 
 
 
@@ -28,7 +32,7 @@ public function create(Request $request)
      
    // 以下を追記
       // Varidationを行う
-      $this->validate($request, Orders::$rules);
+      // $this->validate($request, Orders::$rules);
 
       $orders = new Orders;
       $form = $request->all();

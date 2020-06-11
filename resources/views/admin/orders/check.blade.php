@@ -12,7 +12,7 @@
             <div class="col-md-8 mx-auto">
                 <h2>注文の新規作成</h2>
                 
-                <form action="{{ action('Admin\OrdersController@check') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ action('Admin\OrdersController@create') }}" method="post" enctype="multipart/form-data">
 
                     @if (count($errors) > 0)
                         <ul>
@@ -32,7 +32,7 @@
                     <div class="form-group row">
                         <label class="col-md-2"> {{ $product->product_name}} </label>
                         <div class="col-md-5">
-                             <input type="text" class="form-control" name="price[{{ $product->id }}]" value="{{ old('price') }}">
+                             {{ old('price') }}
                         </div>
                         <div class="col-md-5"> {{ $product->price}} </div>
                     </div>
@@ -41,7 +41,7 @@
                     <div class="form-group row">
                         <label class="col-md-2">画像</label>
                         <div class="col-md-10">
-                            <input type="file" class="form-control-file" name="image">
+                          
                         </div>
                     </div>
                     {{ csrf_field() }}
