@@ -17,7 +17,7 @@
                     <div class="form-group row">
                         <label class="col-md-2" for="title">商品名</label>
                         <div class="col-md-10">
-                            <input type="text" class="form-control" name="product_name" value="{{ $product_form->product_name }}">
+                            <input type="text" class="form-control" name="product_name" value="{{ $products_form->product_name }}">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </form>
-               
+               news
            </div>
         </div>
     </div>

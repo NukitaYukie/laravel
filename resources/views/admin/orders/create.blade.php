@@ -21,31 +21,42 @@
                             @endforeach
                         </ul>
                     @endif
-                    
                     <div class="form-group row">
-                        <div class="col-md-2">商品名</div>
+                        <label class="col-md-3">注文者</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" name="user_name" value="{{ old('user_name') }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3">メールアドレス</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" name="user_mail_address" value="{{ old('user_mail_address') }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">商品名</div>
                         <div class="col-md-5">数量</div>
                         <div class="col-md-5">単価</div>    
                         
                     </div>
                     @foreach($products as $product)
                     <div class="form-group row">
-                        <label class="col-md-2"> {{ $product->product_name}} </label>
+                        <label class="col-md-3"> {{ $product->product_name}} </label>
                         <div class="col-md-5">
-                             <input type="text" class="form-control" name="price[{{ $product->id }}]" value="{{ old('price') }}">
+                             <input type="text" class="form-control" name="amount[{{ $product->id }}]" value="{{ old('price') }}">
                         </div>
                         <div class="col-md-5"> {{ $product->price}} </div>
                     </div>
                     @endforeach
                    
                     <div class="form-group row">
-                        <label class="col-md-2">画像</label>
+                        <label class="col-md-3">画像</label>
                         <div class="col-md-10">
                             <input type="file" class="form-control-file" name="image">
                         </div>
                     </div>
                     {{ csrf_field() }}
-                    <input type="submit" class="btn btn-primary" value="更新">
+                    <input type="submit" class="btn btn-primary" value="確認ページへ">
                 </form>
                 
                 

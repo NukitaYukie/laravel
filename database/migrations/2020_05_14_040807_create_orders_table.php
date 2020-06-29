@@ -16,11 +16,11 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->dateTime('order_datetime');
-            $table->unsignedMediumInteger('user_id');
+            $table->unsignedMediumInteger('user_id')->nullable();
             $table->string('user_mail_address'); 
             $table->string('user_name'); 
-            $table->MediumInteger('payment');
-            $table->MediumInteger('tax');
+            $table->MediumInteger('total');
+            $table->MediumInteger('tax')->nullable();
             $table->string('description');
             $table->dateTime('deleted_at')->nullable();
             $table->timestamps();

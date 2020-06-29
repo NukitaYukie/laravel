@@ -19,11 +19,20 @@ class OrdersController extends Controller
       return view('admin.orders.create', ['products' => $products]);
   }
 
-public function check(Request $request)
-{ 
-      $form = $request->all();
-      return view('admin.orders.check',['products' =>$form]);
-}
+        public function check(Request $request)
+        { 
+            $form = $request->all();
+     
+            $products = Product::all();
+            $total = 0;
+            foreach ($products as $product) {
+                if ($form['amount'][$product->id] > 0) {
+                    $total += $product->price * $form['amount'][$product->id];
+                }
+            }
+            
+            return view('admin.orders.check',['products' => $products, 'form' => $form, 'total' => $total ]);
+        }
 
 
 
@@ -43,8 +52,11 @@ public function create(Request $request)
        $path = Storage::disk('s3')->putFile('/',$form['image'],'public');
        $orders->image_path = Storage::disk('s3')->url($path);
       } else {
-          $orders->image_path = null;
+          //$orders->image_path = null;
       }
+     foreach($form['amount'] as $value) {
+       
+     }
 
       // フォームから送信されてきた_tokenを削除する
       unset($form['_token']);
@@ -52,7 +64,12 @@ public function create(Request $request)
       unset($form['image']);
 
       // データベースに保存する
-      $orders->fill($form);
+      $orders->fill([ 
+        'order_date_time' => Carbon::now(),
+        'user_mail_address' => $form['user_mail_address'],
+        'user_name' => $form['user_name']
+        
+        ]);
       $orders->save();
   
      
