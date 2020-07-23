@@ -26,15 +26,16 @@ public function create(Request $request)
       // Varidationを行う
       $this->validate($request, Product::$rules);
 
-      $product = new Product;
+      
       $form = $request->all();
-
+      //dd($form);
+       $product = new Product;  
       // フォームから画像が送信されてきたら、保存して、$product->image_path に画像のパスを保存する
       if (isset($form['image'])) {
        $path = Storage::disk('s3')->putFile('/',$form['image'],'public');
        $product->image_path = Storage::disk('s3')->url($path);
       } else {
-          $product->image_path = null;
+       $product->image_path = null;
       }
 
       // フォームから送信されてきた_tokenを削除する

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Storage;
 use App\Orders;
+use App\OrderDetail;
 use App\Product;
 class OrdersController extends Controller
 {
@@ -43,6 +44,13 @@ public function create(Request $request)
       // Varidationを行う
       // $this->validate($request, Orders::$rules);
 
+      $product = new Product;
+      $allproduct = $product->all();
+      //dd($allproduct);
+      $products = [];
+      foreach ($allproduct as $value) {
+        $products[$value['id']] = $value;
+      }
       $orders = new Orders;
       $form = $request->all();
 
@@ -54,25 +62,59 @@ public function create(Request $request)
       } else {
           //$orders->image_path = null;
       }
-     foreach($form['amount'] as $value) {
-       
+      //dd($form);
+      $total = 0;
+     foreach($form['amount'] as $product_id => $value) {
+       if ($products[$product_id]) {
+         if($products[$product_id]['price']) {
+          $price = $products[$product_id]['price'];  
+          $total += $price * (integer)$value;  
+         }
+       }
+      
      }
-
+     //dd($total);
       // フォームから送信されてきた_tokenを削除する
       unset($form['_token']);
       // フォームから送信されてきたimageを削除する
       unset($form['image']);
-
+      $description = isset($form['description']) 
+          ? $form['description'] 
+          : '';
+      
       // データベースに保存する
       $orders->fill([ 
-        'order_date_time' => Carbon::now(),
+        'order_datetime' => Carbon::now(),
         'user_mail_address' => $form['user_mail_address'],
-        'user_name' => $form['user_name']
-        
+        'user_name' => $form['user_name'],
+        'total' => $total,
+        'description' => $description,
         ]);
       $orders->save();
-  
-     
+      //dd($orders);
+      //dd($form);
+      $order_detail_new = new OrderDetail;
+      foreach($form['amount'] as $product_id => $value) {
+         if ($products[$product_id]) {
+             if($products[$product_id]['price']) {
+                $price = $products[$product_id]['price'];  
+              //$products[$value['id']] = $value;
+                $order_detail = clone $order_detail_new;
+              //$order_detail->order_id = (integer)$orders->original['id'];
+              //$order_detail->amount = (integer)$value;
+              //$order_detail->price = $price;
+              //$order_detail->product_id = $product_id;
+                $order_detail->fill([
+                    'order_id' => (integer)$orders->original['id'],
+                    'amount' => (integer)$value,
+                    'price' => $price,
+                    'product_id' => $product_id,
+                ]);
+                dd($order_detail);
+                $order_detail->save();
+             }
+         }
+      }
 
       // admin/orders/createにリダイレクトする
       return redirect('admin/orders');
@@ -97,10 +139,25 @@ public function index(Request $request)
   {
       // orders Modelからデータを取得する
       $orders = Orders::find($request->id);
+      //dd($orders);
       if (empty($orders)) {
         abort(404);    
       }
-      return view('admin.orders.edit', ['orders_form' => $orders]);
+      //商品情報の取得
+       $product = new Product;
+      $allproduct = $product->all();
+      $products = [];
+      foreach ($allproduct as $value) {
+        $products[$value['id']] = $value;
+      }
+      //注文詳細情報の取得
+      $order_detail = new OrderDetail;
+      $order_details = $order_detail->where('order_id', $request->id)->get();
+      dd($order_details);
+      return view('admin.orders.edit', [
+          'order_form' => $orders,
+          'products' => $products,
+      ]);
   }
 
 
