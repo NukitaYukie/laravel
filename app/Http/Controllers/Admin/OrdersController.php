@@ -91,6 +91,8 @@ public function create(Request $request)
         'description' => $description,
         ]);
       $orders->save();
+      $order_id = (integer)$orders->id;
+      //dd($order_id);
       //dd($orders);
       //dd($form);
       $order_detail_new = new OrderDetail;
@@ -105,12 +107,12 @@ public function create(Request $request)
               //$order_detail->price = $price;
               //$order_detail->product_id = $product_id;
                 $order_detail->fill([
-                    'order_id' => (integer)$orders->original['id'],
+                    'order_id' => $order_id,
                     'amount' => (integer)$value,
                     'price' => $price,
                     'product_id' => $product_id,
                 ]);
-                dd($order_detail);
+                //dd($order_detail);
                 $order_detail->save();
              }
          }
@@ -153,10 +155,16 @@ public function index(Request $request)
       //注文詳細情報の取得
       $order_detail = new OrderDetail;
       $order_details = $order_detail->where('order_id', $request->id)->get();
-      dd($order_details);
+      //dd($order_details);
+      $order_details_all = [];
+      //プロダクトIDをキーとした商品情報一覧
+      foreach ($order_details as $value ){
+         $order_details_all[$value['product_id']] = $value;
+      }
       return view('admin.orders.edit', [
           'order_form' => $orders,
           'products' => $products,
+          'order_details_all' => $order_details_all,
       ]);
   }
 
@@ -170,14 +178,11 @@ public function index(Request $request)
       // 送信されてきたフォームデータを格納する
       $orders_form = $request->all();
      
-     
       unset($orders_form['_token']);
 
       // 該当するデータを上書きして保存する
       $orders->fill($orders_form)->save();
-
       
-
       return redirect('admin/orders');
         
       }

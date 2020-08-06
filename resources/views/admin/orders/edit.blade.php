@@ -35,11 +35,19 @@
                     <div class="form-group row">
                         <label class="col-md-3"> {{ $product->product_name}} </label>
                         <div class="col-md-5">
-                             <input type="text" class="form-control" name="amount[{{ $product->id }}]" value="{{ old('price') }}">
+                             <input type="text" class="form-control" name="amount[{{ $product->id }}]" value="{{ $order_details_all[$product->id ]->amount }}"> 
+                             
                         </div>
                         <div class="col-md-5"> {{ $product->price}} </div>
                     </div>
                     @endforeach
+                    <div class="form-group row">
+                        <label class="col-md-3"> 注文日時 </label>
+                        <div class="col-md-5">
+                             <input type="text" class="form-control" name="order_date_time" value="{{ $order_form->order_date_time}}"> 
+                             
+                        </div>
+                    </div>
                     
                     <div class="form-group row">
                         <label class="col-md-2" for="image">画像</label>
