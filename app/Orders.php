@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Orders extends Model
 {
     protected $guarded = array('id');
-    
-    
 
     // 以下を追記
     public static $rules = array(
@@ -21,13 +19,10 @@ class Orders extends Model
         'total' => 'required|integer',
         'tax' => 'integer',
         'description' => 'required',
-        
     );
-    
+
     //public function orderDetails()
     //{
         //return $this->hasMany('App\OrderDetail');
     //}
-
-    
 }
