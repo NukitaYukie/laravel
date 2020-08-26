@@ -15,7 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->dateTime('order_date_time');
+            $table->dateTime('order_datetime');
             $table->unsignedMediumInteger('user_id')->nullable();
             $table->string('user_mail_address'); 
             $table->string('user_name'); 

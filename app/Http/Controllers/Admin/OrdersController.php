@@ -92,32 +92,24 @@ public function create(Request $request)
         ]);
       $orders->save();
       $order_id = (integer)$orders->id;
-      //dd($order_id);
-      //dd($orders);
-      //dd($form);
-      $order_detail_new = new OrderDetail;
+      
       foreach($form['amount'] as $product_id => $value) {
          if ($products[$product_id]) {
              if($products[$product_id]['price']) {
                 $price = $products[$product_id]['price'];  
-              //$products[$value['id']] = $value;
-                $order_detail = clone $order_detail_new;
-              //$order_detail->order_id = (integer)$orders->original['id'];
-              //$order_detail->amount = (integer)$value;
-              //$order_detail->price = $price;
-              //$order_detail->product_id = $product_id;
-                $order_detail->fill([
+              
+                $array = [
                     'order_id' => $order_id,
                     'amount' => (integer)$value,
                     'price' => $price,
                     'product_id' => $product_id,
-                ]);
-                //dd($order_detail);
-                $order_detail->save();
+                ]; 
+                OrderDetail::create($array);
              }
          }
       }
-
+      
+               
       // admin/orders/createにリダイレクトする
       return redirect('admin/orders');
   } 
@@ -154,7 +146,8 @@ public function index(Request $request)
       }
       //注文詳細情報の取得
       $order_detail = new OrderDetail;
-      $order_details = $order_detail->where('order_id', $request->id)->get();
+      //$order_details = $order_detail->where('order_id', $request->id)->get();
+      $order_details = $this->getOrderDetails($request->id);
       //dd($order_details);
       $order_details_all = [];
       //プロダクトIDをキーとした商品情報一覧
@@ -172,16 +165,24 @@ public function index(Request $request)
   public function update(Request $request)
   {
       // Validationをかける
-      $this->validate($request, Orders::$rules);
+      //$this->validate($request, Orders::$rules);
       // orders Modelからデータを取得する
       $orders = Orders::find($request->id);
       // 送信されてきたフォームデータを格納する
-      $orders_form = $request->all();
-     
-      unset($orders_form['_token']);
+      $form = $request->all();
+      $order_form = [
+          'order_datetime' => $form['order_datetime'],
+          'user_mail_address' => $form['user_mail_address'],
+          'user_name' => $form['user_name'],
+          'total' => $form['total'],
+          'description' => $form['description'] === null ?: '',
+      ];
+      
+       //dd($form);
+      //unset($orders_form['_token']);
 
       // 該当するデータを上書きして保存する
-      $orders->fill($orders_form)->save();
+      $orders->fill($order_form)->save();
       
       return redirect('admin/orders');
         
@@ -195,4 +196,19 @@ public function index(Request $request)
       return redirect('admin/orders/');
    
 }
+    private function getOrderDetails($order_id)
+    {
+        $result = OrderDetail::where('id', $order_id)->get();
+        //dd($result);
+        $results = [];
+        foreach($result as $r){
+            $results[$r->product_id] = [
+                'order_id' => $r->order_id,
+                'product_id' => $r->product_id,
+                'amount' => $r->amount,
+                'price' => $r->price,
+            ];  
+        }
+        return $results;
+    }
 }

@@ -27,28 +27,45 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-md-2">注文日時</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="order_datetime" value="{{ $order_form->order_datetime }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <div class="col-md-3">商品名</div>
-                        <div class="col-md-5">数量</div>
-                        <div class="col-md-5">単価</div>    
+                        <div class="col-md-3">数量</div>
+                        <div class="col-md-3">単価</div>    
                     </div> 
                     @foreach($products as $product)
                     <div class="form-group row">
                         <label class="col-md-3"> {{ $product->product_name}} </label>
-                        <div class="col-md-5">
-                             <input type="text" class="form-control" name="amount[{{ $product->id }}]" value="{{ $order_details_all[$product->id ]->amount }}"> 
+                        <div class="col-md-3">
+                             <input type="text" class="form-control" name="amount[{{ $product->id }}]" 
+                             @if (isset($order_details_all[$product->id]))
+                                 value="{{ $order_details_all[$product->id ]->amount }}"
+                             @else
+                                 value="0"
+                             @endif
+                             > 
                              
                         </div>
-                        <div class="col-md-5"> {{ $product->price}} </div>
+                        <div class="col-md-3"> {{ $product->price}} </div>
                     </div>
                     @endforeach
                     <div class="form-group row">
-                        <label class="col-md-3"> 注文日時 </label>
-                        <div class="col-md-5">
-                             <input type="text" class="form-control" name="order_date_time" value="{{ $order_form->order_date_time}}"> 
-                             
+                        <label class="col-md-2">合計金額</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" value="{{ $order_form->total }}" disabled>
+                            <input type="hidden" class="form-control" name="total" value="{{ $order_form->total }}" >
                         </div>
                     </div>
-                    
+                    <div class="form-group row">
+                        <label class="col-md-2">備考欄</label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" name="description" row="5">{{ $order_form->description }}</textarea>
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label class="col-md-2" for="image">画像</label>
                         <div class="col-md-10">
