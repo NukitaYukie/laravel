@@ -14,10 +14,6 @@ class OrderDetail extends Model
         'order_id' => 'required|integer',
         'product_id' => 'required|integer',
         'amount' => 'required|integer',
-        'price' => 'required|integer',
-        
-        
+        'price' => 'required|integer'
     );
-
-    
 }

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
 {
-   
     protected $guarded = array('id');
 
     // 以下を追記
@@ -15,14 +14,10 @@ class Profile extends Model
         'gender' => 'required',
         'hobby' => 'required',
         'introduction' => 'required',
-    ); 
-   
+    );
+
     public function histories()
     {
-      return $this->hasMany('App\HistoryProfile');
-
+        return $this->hasMany('App\HistoryProfile');
     }
-   
-   
-  
 }

@@ -17,8 +17,8 @@ class CreateOrdersTable extends Migration
             $table->bigIncrements('id');
             $table->dateTime('order_datetime');
             $table->unsignedMediumInteger('user_id')->nullable();
-            $table->string('user_mail_address'); 
-            $table->string('user_name'); 
+            $table->string('user_mail_address');
+            $table->string('user_name');
             $table->MediumInteger('total');
             $table->MediumInteger('tax')->nullable();
             $table->string('description');
