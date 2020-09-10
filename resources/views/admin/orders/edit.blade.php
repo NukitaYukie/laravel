@@ -41,13 +41,13 @@
                     <div class="form-group row">
                         <label class="col-md-3"> {{ $product->product_name}} </label>
                         <div class="col-md-3">
-                             <input type="text" class="form-control" name="amount[{{ $product->id }}]" 
-                             @if (isset($order_details_all[$product->id]))
-                                 value="{{ $order_details_all[$product->id ]->amount }}"
-                             @else
-                                 value="0"
-                             @endif
-                             > 
+                            <input type="text" class="form-control" name="amount[{{ $product->id }}]" 
+                            @if (isset($order_details_all[$product->id]))
+                                value="{{ $order_details_all[$product->id ]['amount'] }}"
+                            @else
+                                value="0"
+                            @endif
+                            > 
                              
                         </div>
                         <div class="col-md-3"> {{ $product->price}} </div>

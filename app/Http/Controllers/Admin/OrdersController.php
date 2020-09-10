@@ -142,6 +142,7 @@ class OrdersController extends Controller
         foreach ($allproduct as $value) {
             $products[$value['id']] = $value;
         }
+        
         //注文詳細情報の取得
         $order_detail = new OrderDetail;
         //$order_details = $order_detail->where('order_id', $request->id)->get();
@@ -152,6 +153,7 @@ class OrdersController extends Controller
         foreach ($order_details as $value) {
             $order_details_all[$value['product_id']] = $value;
         }
+        //dd($order_details_all);
         return view('admin.orders.edit', [
             'order_form' => $orders,
             'products' => $products,
@@ -165,13 +167,48 @@ class OrdersController extends Controller
         //$this->validate($request, Orders::$rules);
         // orders Modelからデータを取得する
         $orders = Orders::find($request->id);
+        $order_details = $this->getOrderDetails($request->id);
+        //dd($order_details);
         // 送信されてきたフォームデータを格納する
         $form = $request->all();
+        //dd($form);
+        $total = 0;
+        
+        $product = new Product;
+        $allproduct = $product->all();
+        //dd($allproduct);
+        $products = [];
+        foreach ($allproduct as $value) {
+            $products[$value['id']] = $value;
+        }
+        //dd($products);
+        if (is_array($form['amount'])) {
+            foreach ($form['amount'] as $key => $value) {
+                $total += $products[$key]->price * (int)$value;
+                
+                $params = [
+                    'product_id' => $key,
+                    'order_id' => $request->id,
+                    'amount' => (int)$value,
+                    'price' => $products[$key]->price,
+                ];
+                
+                if (isset($order_details[$key ])) {
+                    //update
+                    $this->updateOderDetail($params);
+                    
+                } else {
+                    //insert
+                    $this->insertOrderDetail($params);
+                    
+                } 
+            }
+        }
         $order_form = [
             'order_datetime' => $form['order_datetime'],
             'user_mail_address' => $form['user_mail_address'],
             'user_name' => $form['user_name'],
-            'total' => $form['total'],
+            'total' => $total,
             'description' => $form['description'] === null ?: '',
         ];
 
@@ -208,5 +245,28 @@ class OrdersController extends Controller
             ];
         }
         return $results;
+    }
+    
+    private function insertOrderDetail($params)
+    {
+        //
+        
+        //dd($params);
+        $detail = new OrderDetail;
+        $detail->fill($params)->save();
+    }
+    
+    private function updateOderDetail($params)
+    {
+        //
+        $detail = OrderDetail::where('order_id', $params['order_id'])
+            ->where('product_id', $params['product_id']);
+            
+        //$detail->amount = $params['amount'];
+        //$detail->save();
+        //dd($params);
+        $detail->fill($params);
+        $detail->save();
+        
     }
 }
