@@ -165,16 +165,6 @@ class OrdersController extends Controller
     {
         // Validationをかける
         //$this->validate($request, Orders::$rules);
-
-        $order_id = $request->id;
-
-        // 一度商品一覧を全部取得して、商品IDをキーとした配列を作る
-        $products = Product::all();
-        $product_all = [];
-        foreach ($products as $product) {
-            $product_all[$product['id']] = $product;
-        }
-
         // orders Modelからデータを取得する
         $orders = Orders::find($request->id);
         $order_details = $this->getOrderDetails($request->id);
@@ -228,41 +218,6 @@ class OrdersController extends Controller
         // 該当するデータを上書きして保存する
         $orders->fill($order_form)->save();
 
-        foreach ($form['amount'] as $product_id => $amount) {
-
-            // 注文詳細情報
-            $order_detail = OrderDetail::where('order_id', $order_id)->where('product_id', $product_id)->get();
-
-            // 複数の場合は一度削除する
-            if (count($order_detail) > 1) {
-                $order_detail->delete();
-            }
-            if (is_null($order_detail)) {
-                // 新規登録
-                \Log::debug(__LINE__.' [insert]');
-                $array = [
-                    'order_id' => $order_id,
-                    'amount' => (int)$amount,
-                    'price' => $product_all[$product_id]['price'],
-                    'product_id' => $product_id,
-                ];
-                dd($array);
-                OrderDetail::create($array);
-            } else {
-                if ($order_detail[0]['amount'] !== (int)$amount) {
-                    // 更新
-                    \Log::debug(__LINE__.' [update]');
-                    OrderDetail::where('order_id', $order_id)->where('product_id', $product_id)->update([
-                        'amount' => (int)$amount,
-                        'updated_at' => Carbon::now(),
-                    ]);
-                } else {
-                    // 何もしない
-                    \Log::debug(__LINE__.' [none]');
-                }
-            }
-        }
-
         return redirect('admin/orders');
     }
 
@@ -278,7 +233,7 @@ class OrdersController extends Controller
 
     private function getOrderDetails($order_id)
     {
-        $result = OrderDetail::where('order_id', $order_id)->get();
+        $result = OrderDetail::where('id', $order_id)->get();
         //dd($result);
         $results = [];
         foreach ($result as $r) {
